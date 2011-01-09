@@ -1,4 +1,4 @@
-sh.ulse (shack pulse)
+sh.ulse (shack.pulse)
 ==============================================
 
 sh.ulse is a small shell script to stream YouTube videos and offers the possibility to switch of the video output and listen to the sound either locally or over the [shackspace](http://shackspace.de) pulse audio server.
