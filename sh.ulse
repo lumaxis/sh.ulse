@@ -1,0 +1,42 @@
+#!/bin/bash
+# Author: Lukas 'Blubser' Spieß
+# License: shackware
+#
+# This little script is made to have fun @shackspace, the Stuttgarter Hackerspace
+# It is based on a small tool called "youtube-dl", which is necessary to run it.
+# With this script you can stream and play youtube videos using youtube-dl and mplayer
+#
+# Big kudos to youtube-dl's authors Ricardo Garcia Gonzalez, Danny Colligan, Benjamin Johnson & Vasyl' Vavrychuk
+# Very huge thanks to @pfleidi for helping out so many times ;)
+
+
+audio=
+video="-novideo"
+while getopts 'a:vh' OPTION
+do
+  case $OPTION in
+    a) audio=
+              aval="$OPTARG"
+    ;;
+    v) video=""
+    ;;      
+    ?) printf "Usage: %s: [options] url...\n\nOptions:
+  -a <destination>     specify audiodestination. 'local' or 'shack' for the pulse audio server @shackspace
+  -v                   triggers local video output. don't use it, if you just want to have audio.\n" $(basename $0) >&2
+    exit 2
+    ;;
+  esac
+done
+shift $(($OPTIND - 1))
+
+if [ "$aval" = "local" ]; then
+    audio=""
+fi
+if [ "$aval" = "shack" ]; then
+    audio="-ao pulse:pulse.shack"
+fi
+
+cookiefile="/tmp/cookies-$( date +%s.%N ).txt";
+url=$( youtube-dl --cookies $cookiefile -g "$@" );
+mplayer $video $audio -cookies -cookies-file $cookiefile $url;    
+rm -f $cookiefile
